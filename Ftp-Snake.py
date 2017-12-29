@@ -24,7 +24,8 @@ def _ftplogin_(url, username, wordlist):
         password = password.strip('\r').strip('\n')
         try:
             with ftplib.FTP(url) as ftp:
-                username = anonymous
+                
+                #username = anonymous
                 password = password
                 #ftp = ftp(url)
                 ftp.login(user=username, passwd=password)
