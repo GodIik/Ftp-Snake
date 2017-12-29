@@ -101,7 +101,7 @@ def _ftpsurf_(url, username, password, ftplogin):
                 if comando == "help":
                     print(ftphelp)
                 elif comando == "exit":
-                    print(Fore.RED + "[!] Connessione Interrotta!")
+                    print(Fore.RED + "\n[!] Connessione Interrotta!")
                     ftp.close()
                     volontario = True
                     sys.exit()
@@ -118,50 +118,9 @@ def _ftpsurf_(url, username, password, ftplogin):
                 elif comando[0:5] == "--dir":#
                     print(ftp.retrlines('LIST'))
                     #print(ftp.nlist())
-                elif comando[0:5] == "--ren":
-                    danome = comando[6:0]
-                elif comando[0:6] == "--send":
-                    try:
-                        ftp.sendcmd(comando[3:0])
-                    except:
-                        _time_ = time.strftime("%H:%M:%S")
-                        print(Fore.YELLOW + "[%s] Errore: Comando Errato!" %(_time_))
-                elif comando[0:6] == "--text":
-                    _time_ = time.strftime("%H:%M:%S")
-                    print(Fore.YELLOW + "[%s] Connessione momentaneamente Interrotta!" %(_time_))
-                    ftp.close()
-                    filename = comando[7:]
-                    titlename = True
-                    filename = open(filename, 'a')
-                    while 1 > 0:
-                        #filename = open(filename, 'w')
-                        linefile = input(" > ")
-                        if linefile != "--exit":
-                            filename.write(linefile + "\n")
-                        else:
-                            try:
-                                filename.close()
-                            except:
-                                print("[!] Errore")
-                            break
-                    #_time_ = time.strftime("%H:%M:%S")
-                    #print(Fore.GREEN + "[" + _time_ + "] Uplodare il File %s nel Server? [s/N] ", end=" > ")
-                    #upload = input()
-                    #if upload == "s":
-                        #try:
-                        #directorycorrenteos = os.getcwd()
-                        #print(directorycorrenteos)
-                        #nomefile = filename
-                        #fullname = directorycorrenteos + nomefile
-                        #name = os.path.split(fullname)[1]
-                        #f = open(fullname, 'rb')
+                #elif comando[0:5] == "--ren":
+                #    danome = comando[6:0]
 
-                        #ftp.storbinary('STOR' + name, f)
-                        #except:
-                        #_time_ = time.strftime("%H:%M:%S")
-                        #print(Fore.YELLOW + "[%s] Errore: File non Uplodato!" %(_time_))
-                    #else:
-                        #pass
                 elif comando[0:5] == "--del":
                     filename = comando[6:]
                     print(Fore.GREEN + "[" + _time_ + "] Cancellare il File %s dal Server? [s/N] " %(filename), end=" > ")
@@ -174,6 +133,9 @@ def _ftpsurf_(url, username, password, ftplogin):
                 elif comando[0:5] == "clear":
                     os.system('cls')
                     print(banner)
+                else:
+                    _time_ = time.strftime("%H:%M:%S")
+                    print(Fore.YELLOW + "[%s] Comando Errato!" %(_time_))
 
     else:
         #ftp.close()
@@ -181,29 +143,32 @@ def _ftpsurf_(url, username, password, ftplogin):
 
 
 def __ftpsnake__():
-    #try:
-    if sys.argv[1] == "--help":
+    try:
+        if sys.argv[1] == "--help":
+            print(opzioni)
+            sys.exit()
+
+        if sys.argv[1] == "--A":
+            url = sys.argv[2]
+            __ftplogin__(url)
+
+        if sys.argv[1] == "--B":
+            print("b")
+            url = sys.argv[2]
+            if sys.argv[3] == "USER":
+                print("u")
+                username = sys.argv[4]
+                if sys.argv[5] == "--P":
+                    print("p")
+                    wordlist = sys.argv[6]
+                    _ftplogin_(url, username, wordlist)
+
+    except KeyboardInterrupt:
+        pass
+    except IndexError:
+        #print(banner)
         print(opzioni)
         sys.exit()
-
-    if sys.argv[1] == "--A":
-        url = sys.argv[2]
-        __ftplogin__(url)
-
-    if sys.argv[1] == "--B":
-        print("b")
-        url = sys.argv[2]
-        if sys.argv[3] == "USER":
-            print("u")
-            username = sys.argv[4]
-            if sys.argv[5] == "--P":
-                print("p")
-                wordlist = sys.argv[6]
-                _ftplogin_(url, username, wordlist)
-    else:
-        print(opzioni)
-    #except:
-        #pass
 
 
 
@@ -228,9 +193,7 @@ ftphelp = """[COMANDI FTP]
     --cd <DIRECTORY>                 - Cambia Directory
     --dir                            - Mostra la lista di Directory e
                                        File
-    --ren <FROMFILE> --to <TOFILE>   - Rinomina un File
     --del <FILENAME.EXTENSION>       - Cancella un File
-    --text <FILENAME.EXTENSION>      - Apri un documento e Scrivi note
 
 [ALTRI COMANDI]
 
